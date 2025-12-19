@@ -1,7 +1,5 @@
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
-use std::fmt;
-use std::ops::Deref;
 use thiserror::Error;
 
 const CHAR_WHITELIST: &[char] = &[
@@ -21,28 +19,12 @@ impl Username {
         Ok(Self { username })
     }
 
+    pub fn as_str(&self) -> &str {
+        &self.username
+    }
+
     pub fn validate(&self) -> Result<(), UsernameError> {
         validate_username(&self.username)
-    }
-}
-
-impl Deref for Username {
-    type Target = str;
-
-    fn deref(&self) -> &Self::Target {
-        &self.username
-    }
-}
-
-impl fmt::Display for Username {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str(&self.username)
-    }
-}
-
-impl AsRef<str> for Username {
-    fn as_ref(&self) -> &str {
-        &self.username
     }
 }
 
