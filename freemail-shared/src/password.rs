@@ -32,14 +32,21 @@ impl Password {
 }
 
 pub fn validate_password(password: &str) -> Result<(), PasswordError> {
+    if password.trim().is_empty() {
+        return Err(PasswordError::Blank);
+    }
+
     password
         .chars()
         .find(|c| !CHAR_WHITELIST.contains(c))
-        .map_or(Ok(()), |c| Err(PasswordError::InvalidCharacter { char: c }))
+        .map_or(Ok(()), |c| Err(PasswordError::InvalidChar { char: c }))
 }
 
 #[derive(Debug, Error)]
 pub enum PasswordError {
+    #[error("password cannot be blank")]
+    Blank,
+
     #[error("invalid character: {char}")]
-    InvalidCharacter { char: char },
+    InvalidChar { char: char },
 }

@@ -29,14 +29,21 @@ impl Username {
 }
 
 pub fn validate_username(username: &str) -> Result<(), UsernameError> {
+    if username.trim().is_empty() {
+        return Err(UsernameError::Blank);
+    }
+
     username
         .chars()
         .find(|c| !CHAR_WHITELIST.contains(c))
-        .map_or(Ok(()), |c| Err(UsernameError::InvalidCharacter { char: c }))
+        .map_or(Ok(()), |c| Err(UsernameError::InvalidChar { char: c }))
 }
 
 #[derive(Debug, Error)]
 pub enum UsernameError {
+    #[error("password cannot be blank")]
+    Blank,
+
     #[error("invalid character: {char}")]
-    InvalidCharacter { char: char },
+    InvalidChar { char: char },
 }
